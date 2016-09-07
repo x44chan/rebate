@@ -20,7 +20,9 @@
 					<th width="12%">Rebate</th>
 					<th width="30%">Description</th>
 					<th width="10%">Status</th>
+				<?php if($access->level > 1){ ?>
 					<th>Action</th>
+				<?php }	?>
 				</tr>
 			</thead>
 			<tbody id = "onchange">
@@ -78,20 +80,22 @@
 							echo '<td>' . $row['ornum'] . '</td>';
 							echo '<td>₱ ' . number_format($row['amount'],2) . '</td>';
 							echo '<td>' . $row['rebate'] . '</td>';
-							echo '<td>' . $row['descr'] . $row['descr'] . $row['descr']. $row['descr'] . '</td>';
-							echo '<td><b>' . $status . '</b></td>';
-							echo '<td align = "center">';
-								if($row['state'] < 2 && $rebate > 0 && $row['refnum'] == ""){
-									echo '<a onclick = "deposit('.$row['rebate_id'].','.$rebate.');" class = "btn btn-sm btn-success" data-toggle="tooltip" title="Add Payment"><span>₱</span></a>';	
-								}else{
-									echo ' - ';
-								}									
+							echo '<td>' . $row['descr'] . '</td>';
+							echo '<td><b>' . $status . '</b></td>';							
+								if($access->level > 1){
+									echo '<td align = "center">';
+									if($row['state'] < 2 && $rebate > 0 && $row['refnum'] == ""){
+										echo '<a onclick = "deposit('.$row['rebate_id'].','.$rebate.');" class = "btn btn-sm btn-success" data-toggle="tooltip" title="Add Payment"><span>₱</span></a>';	
+									}else{
+										echo ' - ';
+									}		
+									echo '</td>';
+								}							
 								//<a href = "rebate/view/'.$row['rebate_id'].'" class = "btn btn-sm btn-primary" data-toggle="tooltip" title="View"><span class = "icon-search"></span></a>
 								//if($access->level >= 2){
 								//	echo ' <a href = "rebate/edit/'.$row['rebate_id'].'" class = "btn btn-sm btn-warning" data-toggle="tooltip" title="Edit"><span class = "icon-quill"></span></a>';
 								//	echo ' <a href = "rebate/delete/'.$row['rebate_id'].'" class = "btn btn-sm btn-danger" data-toggle="tooltip" title="Delete"><span class = "icon-bin"></span></a>';
-								//}
-							//echo '</td>';
+								//}							
 							echo '</tr>';
 							$total += $row['amount'];
 						}
