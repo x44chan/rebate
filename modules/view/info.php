@@ -42,7 +42,7 @@
 					<th width="12%">Amount</th>
 					<th width="12%">Rebate</th>
 					<th width="30%">Description</th>
-					<th width="10%">Status</th>
+					<th width="15%">Status</th>
 				</tr>
 			</thead>
 			<tbody id = "onchange">
@@ -60,8 +60,8 @@
 							}elseif($row['state'] > 1){
 								$status = "<font color = 'green'>Completed</font>";
 							}
-							if($row['ornum'] == ""){
-								$row['ornum'] = ' - ';
+							if($row['refnum'] != ""){
+								$status = "<font color = 'green'>Paid (Ref: " . $row['refnum'] . " )</font>";
 							}
 							if($row['rebate'] == "0"){
 								$row['rebate'] = ' - ';

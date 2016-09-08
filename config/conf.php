@@ -10,6 +10,10 @@
 		die("Connection error:". $conn->connect_error);
 	}
 	function savelogs($transaction,$transdetails){
+		$host = "127.0.0.1";
+		$uname = "root";
+		$pword = "";
+		$db = "rebate";
 		$conn = mysqli_connect($host, $uname, $pword, $db);
 		if (mysqli_connect_errno()){
 			die ('Unable to connect to database '. mysqli_connect_error());

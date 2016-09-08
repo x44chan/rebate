@@ -27,9 +27,9 @@
 			</thead>
 			<tbody id = "onchange">
 				<?php
-					$counter = "SELECT count(*) as total FROM company as a,rebate as b where a.company_id = b.company_id group by b.rebate_id";
+					$counter = "SELECT count(*) as total FROM company as a,rebate as b where a.company_id = b.company_id and (b.refnum is null or b.refnum = '') group by b.rebate_id";
 					$counter2 = $conn->query($counter)->fetch_assoc();
-					$perpage = 15;
+					$perpage = 100;
 					$totalPages = ceil($counter2['total'] / $perpage);
 					if(!isset($_GET['view'])){
 					    $_GET['view'] = 0;
@@ -42,12 +42,13 @@
 					    $_GET['view'] = $totalPages;
 					}
 					$startArticle = ($_GET['view'] - 1) * $perpage;
-					$list = "SELECT * FROM company as a,rebate as b where a.company_id = b.company_id group by b.rebate_id LIMIT " . $startArticle . ', ' . $perpage;
+					$list = "SELECT * FROM company as a,rebate as b where a.company_id = b.company_id and (b.refnum is null or b.refnum = '') group by b.rebate_id  LIMIT " . $startArticle . ', ' . $perpage;
 					$res = $conn->query($list);
 					if($res->num_rows > 0){
 						$num = 0;
 						$total = 0;
 						$totrebate = 0;
+						$forpay = array();
 						while ($row = $res->fetch_assoc()) {
 							$num += 1;	
 							if($row['state'] == 0){
@@ -86,6 +87,7 @@
 									echo '<td align = "center">';
 									if($row['state'] < 2 && $rebate > 0 && $row['refnum'] == ""){
 										echo '<a onclick = "deposit('.$row['rebate_id'].','.$rebate.');" class = "btn btn-sm btn-success" data-toggle="tooltip" title="Add Payment"><span>₱</span></a>';	
+										$forpay[] = $row['rebate_id'];
 									}else{
 										echo ' - ';
 									}		
@@ -99,7 +101,20 @@
 							echo '</tr>';
 							$total += $row['amount'];
 						}
-						echo '<tr><td colspan = "4" align = "right"><b><i>Total: </td><td colspan = "1"></td><td><b><i>₱ ' . number_format($total,2) . '</td><td colspan = "4">₱ '.number_format($totrebate,2).'</td></tr>';
+						if(!empty($forpay)){
+							$ids = "";
+							for($i = 0; $i < count($forpay); $i++){
+								if($i == count($forpay) - 1){
+									$ids .= $forpay[$i];
+								}else{
+									$ids .= $forpay[$i] . ',';
+								} 
+							}
+							$ids = '<a onclick = "deposit(\''.$ids.'\','.$totrebate.');" class = "btn btn-sm btn-success" data-toggle="tooltip" title="Pay All"><span>₱</span>ay All </a>';
+						}else{
+							$ids = "";
+						}
+						echo '<tr><td colspan = "4" align = "right"><b><i>Total: </td><td colspan = "1"></td><td><b><i>₱ ' . number_format($total,2) . '</td><td colspan = "3">₱ '.number_format($totrebate,2).'</td><td>' . $ids . '</td></tr>';
 					}else{
 						echo '<tr><td colspan = "9" align = "center"> <h5> No Record Found </h5></td></tr>';
 					}
@@ -111,22 +126,22 @@
 	<?php
 		if(isset($_POST['rebatesub'])){
 			$rebate_id = mysqli_real_escape_string($conn, $_POST['rebate_id']);
-			$rebate = $conn->prepare("UPDATE rebate set rebate = ? where rebate_id = ?");
+			$rebate = $conn->prepare("UPDATE rebate set rebate = ? where rebate_id = ? and rebate = 0");
 			$rebate->bind_param("si", $_POST['rebateamount'], $rebate_id);
 			if($rebate->execute() == TRUE){
-				savelogs("Update Rebate", "Rebate ID -> " . $rebate_id . ' , Add Rebate -> ' . $_POST['rebateamount'] . ' , Status -> For Payment');
-				echo '<script type = "text/javascript">alert("Update Rebate Successful");window.location.replace("/rebate");</script>';
+				savelogs("Update Rebate", "Rebate ID -> " . $rebate_id . ' , Add Rebate -> ₱ ' . number_format($_POST['rebateamount'],2) . ' , Status -> For Payment');
+				echo '<script type = "text/javascript">alert("Update Rebate Successfull");window.location.replace("/rebate");</script>';
 			}
 		}
 	?>
 	<?php
 		if(isset($_POST['deposit'])){
 			$rebate_id = mysqli_real_escape_string($conn, $_POST['rebate_id']);
-			$rebate = $conn->prepare("UPDATE rebate set refnum = ? where rebate_id = ?");
-			$rebate->bind_param("si", $_POST['refnum'], $rebate_id);
+			$rebate = $conn->prepare("UPDATE rebate set refnum = ?, paydate = now() where rebate_id in ($rebate_id) and (refnum ='' or refnum is null)");
+			$rebate->bind_param("s", $_POST['refnum']);
 			if($rebate->execute() == TRUE){
-				savelogs("Paid Rebate", "Rebate ID -> " . $rebate_id . ' , Amount -> '. $_POST['amount'] . ', Reference Number -> ' . $_POST['refnum'] . ' , Status -> Completed');
-				echo '<script type = "text/javascript">alert("Payment Successful");window.location.replace("/rebate");</script>';
+				savelogs("Paid Rebate", "Rebate ID -> " . $rebate_id . ' , Amount -> ₱ '. number_format($_POST['amount'],2) . ', Reference Number -> ' . $_POST['refnum'] . ' , Status -> Completed');
+				echo '<script type = "text/javascript">alert("Payment Successfull");window.location.replace("/rebate");</script>';
 			}
 		}
 	?>
