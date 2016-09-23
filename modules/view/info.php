@@ -3,7 +3,7 @@
 	$list = "SELECT * FROM company as a,rebate as b where a.company_id = '$c_id' and b.company_id = '$c_id' group by b.rebate_id";
 	$res = $conn->query($list)->fetch_assoc();
 	if($conn->query($list)->num_rows <= 0){
-		echo '<script type = "text/javascript">alert("No record found.");window.location.replace("/loan/?module=loan&action=list");</script>';
+		echo '<script type = "text/javascript">alert("No record found.");window.location.replace("view");</script>';
 	}
 ?>
 <div class="container" id = "reportg">
@@ -12,7 +12,7 @@
 			<i><h4  style="margin-left: -40px;"><span class="icon-ticket"></span><u> Rebate Informations</u></h4></i>
 		</div>
 		<div class="col-xs-6">
-			<a href = "javascript:javascript:history.go(-1)" class="btn btn-danger btn-sm pull-right" data-toggle="tooltip" title="Back"><span class = " icon-exit"></span> Back to List </a>
+			<a href = "view" class="btn btn-danger btn-sm pull-right" data-toggle="tooltip" title="Back"><span class = " icon-exit"></span> Back to List </a>
 		</div>
 	</div>
 	<div style="border: 1px solid #eee; padding: 0px 10px 10px 10px; border-radius: 5px;">

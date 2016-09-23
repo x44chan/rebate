@@ -59,6 +59,7 @@
             include 'modules/'.$_GET['module'].'/'.$acc;
         }
      }elseif((isset($_GET['module']) && $_GET['module'] == 'login' && !isset($_SESSION['rebate_acc'])) || (!isset($_SESSION['rebate_acc']))){
+      $_SESSION["REQUEST_URI"] = "$_SERVER[REQUEST_URI]";
       ?>
 <style type="text/css">
 	.table {border-bottom:0px !important;}
@@ -84,6 +85,9 @@
 			</div>';
 		$_SESSION['logout'] = null;
 	}
+  if(isset($_GET['module']) && $_GET['module'] == 'logout'){
+    $_SESSION["REQUEST_URI"] = "/rebate";
+  }
 ?>
 <?php
 	if(isset($_POST['submit'])){
@@ -101,7 +105,7 @@
 			  	echo  '<div class="alert alert-success" align = "center">						
 						<strong>Logging in ~!</strong>
 						</div>';
-			  	echo '<script type="text/javascript">setTimeout(function() {window.location.href = "/rebate"},1000);; </script>';	
+			  	echo '<script type="text/javascript">setTimeout(function() {window.location.href = "'. $_SESSION["REQUEST_URI"]  . '"},1000);; </script>';	
 			}				
 		}else{
 	echo  '<div class="alert alert-warning" align = "center">						
