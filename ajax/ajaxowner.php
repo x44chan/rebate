@@ -83,7 +83,7 @@
 	        	<form role="form" action = "" method = "post">
 	        		<div class="form-group">
 	            		<label>OR Number <font color = "red">*</font> </label>
-	            		<input type = "text" name = "ornum" class="form-control input-sm" placeholder = "Enter ornumber" pattern = "[.0-9]*" required>
+	            		<input type = "text" name = "ornum" class="form-control input-sm" placeholder = "Enter or number" pattern = "[.0-9]*" required>
 		            </div>
 	            	<div class="col-xs-12" align="center">
 	            		<button type="submit" style = "width: 200px;" name = "paysub" class="btn btn-success btn-block btn-sm" onclick="return confirm('Are you sure?');"><span class ="icon-checkmark"></span> Update Rebate</button>
@@ -108,11 +108,11 @@
 	        	<form role="form" action = "" method = "post">
 	        		<div class="form-group">
 	            		<label>Rebate Amount <font color = "red">*</font> </label>
-	            		<input value = "<?php echo $_GET['amount'];?>" type = "text" name = "amount" class="form-control input-sm" placeholder = "Enter ornumber" pattern = "[.0-9]*" required>
+	            		<input value = "<?php echo $_GET['amount'];?>" type = "text" name = "amount" class="form-control input-sm" placeholder = "Enter rebate amount" pattern = "[.0-9]*" required>
 		            </div>
 		            <div class="form-group">
 	            		<label>Reference #: <font color = "red">*</font> </label>
-	            		<input type = "text" name = "refnum" class="form-control input-sm" placeholder = "Enter ornumber" required>
+	            		<input type = "text" name = "refnum" class="form-control input-sm" placeholder = "Enter reference #" required>
 		            </div>
 	            	<div class="col-xs-12" align="center">
 	            		<button type="submit" style = "width: 200px;" name = "deposit" class="btn btn-success btn-block btn-sm" onclick="return confirm('Are you sure?');"><span class ="icon-checkmark"></span> Update Rebate</button>
@@ -137,7 +137,7 @@
 	        	<form role="form" action = "" method = "post">
 	        		<div class="form-group">
 	            		<label>Rebate Amount <font color = "red">*</font> </label>
-	            		<input type = "text" name = "rebateamount" class="form-control input-sm" placeholder = "Enter ornumber" pattern = "[.0-9]*" required>
+	            		<input type = "text" name = "rebateamount" class="form-control input-sm" placeholder = "Enter rebate amount" pattern = "[.0-9]*" required>
 		            </div>
 	            	<div class="col-xs-12" align="center">
 	            		<button type="submit" style = "width: 200px;" name = "rebatesub" class="btn btn-success btn-block btn-sm" onclick="return confirm('Are you sure?');"><span class ="icon-checkmark"></span> Update Rebate</button>

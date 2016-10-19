@@ -63,13 +63,16 @@
 							if($row['ornum'] == ""){
 								$row['ornum'] = ' - ';
 							}
-							if($row['rebate'] == "0" && $access->level > 1){
-								$row['rebate'] = '<a onclick = "rebate('.$row['rebate_id'].');" class = "btn btn-sm btn-primary" data-toggle="tooltip" title="Add Rebate"><span class = "icon-plus"></span></a>';
+							if($access->level > 1){
+								if($row['rebate'] == "0"){
+									$row['rebate'] = '<a onclick = "rebate('.$row['rebate_id'].');" class = "btn btn-sm btn-primary" data-toggle="tooltip" title="Add Rebate"><span class = "icon-plus"></span></a>';
+								}else{
+									$totrebate += $row['rebate'];
+									$row['rebate'] = '₱ ' . number_format($row['rebate'],2);
+								}
 							}else{
-								$totrebate += $row['rebate'];
-								$row['rebate'] = '₱ ' . number_format($row['rebate'],2);
+								$row['rebate'] = ' - ';
 							}
-							
 							echo '<tr>';
 							echo '<td>' . $num . '</td>';
 							echo '<td>' . $row['company_name'] .'</td>';
@@ -111,7 +114,7 @@
 						}else{
 							$ids = "";
 						}
-						echo '<tr><td colspan = "4" align = "right"><b><i>Total: </td><td colspan = "1"></td><td><b><i>₱ ' . number_format($total,2) . '</td><td colspan = "3"><b><i>₱ '.number_format($totrebate,2).'</td><td>' . $ids . '</td></tr>';
+						echo '<tr><td colspan = "4" align = "right"><b><i>Total: </td><td colspan = "1"></td><td><b><i>₱ ' . number_format($total,2) . '</td><td colspan = "3">₱ '.number_format($totrebate,2).'</td><td>' . $ids . '</td></tr>';
 					}else{
 						echo '<tr><td colspan = "9" align = "center"> <h5> No Record Found </h5></td></tr>';
 					}
@@ -143,10 +146,10 @@
 				$company = "SELECT company_id FROM rebate where rebate_id IN ($rebate_id) GROUP BY company_id";
 				$companyres = $conn->query($company);
 				if($companyres->num_rows > 0){
-					$mail_To = 'chano.rocks@gmail.com';
+					$mail_To = 'mikesanandres@gmail.com';
 			        $mail_Subject = "Rebate Payment Notification";
 			        $headers = "From: donotreply@netlinkph.net" . "\r\n";
-			        $headers .= 'Cc: c.aquino_programmer@yahoo.com' . "\r\n";
+			        //$headers .= 'Cc: c.aquino_programmer@yahoo.com' . "\r\n";
 			        $mail_Body = "Helo Sir, \n\n".
 					"Payment Sent for the Rebate #'s: " . $rebate_id . "\n\n".
 					"Reference #: " . $_POST['refnum'] . "\n\n".
